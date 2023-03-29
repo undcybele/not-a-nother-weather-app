@@ -1,0 +1,16 @@
+<form>
+  <mat-form-field>
+    <mat-label>Search</mat-label>
+    <input type="text" placeholder="Search a new place" matInput (keydown)="handleSearch()"  [formControl]="searchControl" [matAutocomplete]="auto">
+    <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
+      <mat-option *ngFor="let option of options$ | async" [value]="option.text" (click)="setSelectedLocation(option)">
+        {{option.text}}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+</form>
+
+<div *ngIf="selectedLocation">
+  <div>Description: {{selectedLocation.text}}</div>
+</div>
+
