@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import {GeolocationApiService} from "../service/geolocation-api.service";
+import {GeolocationApiService} from "../../services/geolocation-api.service";
 import {Observable, map} from "rxjs";
-import {Feature} from "../model/GeolocationApiResponse";
+import {Feature} from "../../models/GeolocationApiResponse";
 import {FormControl} from '@angular/forms';
-import {OpenWeatherApiService} from "../service/open-weather-api.service";
-import {LocalstorageService} from "../service/localstorage.service";
+import {OpenWeatherApiService} from "../../services/open-weather-api.service";
+import {LocalstorageService} from "../../services/localstorage.service";
+import {LocationModel} from "../../models/Location.model";
 
 @Component({
   selector: 'app-search-bar',
@@ -14,7 +15,7 @@ import {LocalstorageService} from "../service/localstorage.service";
 export class SearchBarComponent implements OnInit {
   searchControl = new FormControl('')
   options$: Observable<Array<Feature>> = new Observable<Array<Feature>>()
-  selectedLocation: Feature | undefined;
+  selectedLocation: LocationModel | undefined;
 
   constructor(
     private readonly _locationService: GeolocationApiService,
@@ -25,13 +26,13 @@ export class SearchBarComponent implements OnInit {
   ngOnInit(): void {}
 
   setSelectedLocation(option: Feature) {
-    this.selectedLocation = option
-    this._localStorageService.setCurrentLocation(option)
-    // this._openWeatherService.getWeatherData(option.center[1], option.center[0])
+    this.selectedLocation = {name: option.text, coordinates: option.center}
+    this._locationService.setCurrLocation(this.selectedLocation)
+    this._openWeatherService.getWeatherData().then();
   }
 
   handleSearch() {
     //TODO: check if key is alphanumeric first so the api doesn't get triggered by arrows
-    this.options$ = this._locationService.getLocations(this.searchControl.value).pipe(map(data => data.features))
+    this.options$ = this._locationService.getLocationsOptions(this.searchControl.value).pipe(map(data => data.features))
   }
 }

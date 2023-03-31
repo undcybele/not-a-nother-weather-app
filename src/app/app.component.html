@@ -1,11 +1,31 @@
-<app-search-bar></app-search-bar>
-<p>Faves:</p>
-<app-favorites></app-favorites>
-<br>
-<p>Yesterday's data from <span *ngIf="locationData$ | async as location">{{location.features[0].text}}</span>:</p>
-<div *ngIf="_weatherService.weatherData$ | async as data; else elseBlock">
-  <div>Description: {{data.list[currentHour].weather[0].description}}</div>
-  <div>Feels like: {{data.list[currentHour].main.feels_like}}</div>
-  <div>Actual temp: {{data.list[currentHour].main.temp}}</div>
+<div class="flex flex-row p-8 min-h-screen">
+  <div class="flex basis-4/6 justify-items-start items-end">
+    <div *ngIf="_weatherService.weatherData$ | async as data; else elseBlock">
+        <div class="flex flex-row">
+          <div class="text-3xl">{{_locationService.currentLocation$.value.name}}</div>
+          <button *ngIf="isFavorite(); else elseBlock" (click)="removeFromFavorites()" mat-icon-button color="primary" aria-label="remove from favorites">
+            <mat-icon>favorite</mat-icon>
+          </button>
+          <ng-template #elseBlock>
+            <button mat-icon-button color="primary" aria-label="remove from favorites" (click)="addToFavorites()">
+              <mat-icon>favorite_outline</mat-icon>
+            </button>
+          </ng-template>
+        </div>
+      <div class="text-7xl font-bold">{{data.list[currentHour].weather[0].description}}</div>
+      <div class="text-3xl">Feels like: {{data.list[currentHour].main.feels_like}}</div>
+      <div class="text-3xl">Actual temp: {{data.list[currentHour].main.temp}}</div>
+    </div>
+    <ng-template #elseBlock>Sorry no data was available for this location yesterday</ng-template>
+  </div>
+  <div class="basis-2/6 max-h-screen">
+    <div class="flex flex-col">
+      <div class="flex basis-1/2 min-w-full">
+        <app-search-bar></app-search-bar>
+      </div>
+      <div class="flex basis-1/2 min-w-full">
+        <app-favorites></app-favorites>
+      </div>
+    </div>
+  </div>
 </div>
-<ng-template #elseBlock>Sorry no data was available for this location yesterday</ng-template>

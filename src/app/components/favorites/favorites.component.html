@@ -1,3 +1,5 @@
-<div *ngFor="let location of favoriteLocations">
-  {{location.name}}
-</div>
+  <div *ngFor="let location of _localStorageService.favoriteLocations$.value">
+    {{location.name}}
+  </div>
+
+

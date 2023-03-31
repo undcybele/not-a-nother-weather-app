@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
-import {Observable} from "rxjs";
-import {GeolocationApiResponse} from "../model/GeolocationApiResponse";
+import {BehaviorSubject, map, Observable} from "rxjs";
+import {Feature, GeolocationApiResponse} from "../models/GeolocationApiResponse";
 import {environment} from "../../environments/environment";
+import {LocationModel} from "../models/Location.model";
 
 @Injectable({
   providedIn: 'root'
@@ -12,12 +13,16 @@ export class GeolocationApiService {
   geolocationRootUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
 
   locationData$: Observable<GeolocationApiResponse> = new Observable<GeolocationApiResponse>()
+  currentLocation$: BehaviorSubject<LocationModel> = new BehaviorSubject<LocationModel>({name: 'Timisoara', coordinates: [21.22, 45.7]});
 
   constructor(private readonly _httpClient: HttpClient) {}
 
-  getLocations(input: string): Observable<GeolocationApiResponse> {
-    let url = `${this.geolocationRootUrl}${input}.json?access_token=${this.geolocationApiKey}`
+  getLocationsOptions(input: string): Observable<GeolocationApiResponse> {
+    const url = `${this.geolocationRootUrl}${input}.json?access_token=${this.geolocationApiKey}`
     return this._httpClient.get<GeolocationApiResponse>(url)
   }
 
+  setCurrLocation(location: LocationModel) {
+    this.currentLocation$.next(location)
+  }
 }

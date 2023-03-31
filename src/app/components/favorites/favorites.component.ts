@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import {LocalstorageService} from "../service/localstorage.service";
+import {LocalstorageService} from "../../services/localstorage.service";
 
 @Component({
   selector: 'app-favorites',
@@ -8,11 +8,10 @@ import {LocalstorageService} from "../service/localstorage.service";
 })
 export class FavoritesComponent implements OnInit {
 
-  constructor(private readonly _localStorageService: LocalstorageService) { }
-  favoriteLocations: Array<any> = []
+  constructor(readonly _localStorageService: LocalstorageService) { }
 
   ngOnInit(): void {
-    this.favoriteLocations = this._localStorageService.getAllFavoriteLocations()
+
   }
 
 }

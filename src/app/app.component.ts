@@ -1,10 +1,11 @@
 import {Component, OnInit} from '@angular/core';
-import {OpenWeatherApiService} from "./service/open-weather-api.service";
+import {OpenWeatherApiService} from "./services/open-weather-api.service";
 import {Observable} from "rxjs";
-import {OpenWeatherApiResponse} from "./model/OpenWeatherApiResponse";
-import {GeolocationApiService} from "./service/geolocation-api.service";
-import {GeolocationApiResponse} from "./model/GeolocationApiResponse";
+import {OpenWeatherApiResponse} from "./models/OpenWeatherApiResponse";
+import {GeolocationApiService} from "./services/geolocation-api.service";
+import {GeolocationApiResponse} from "./models/GeolocationApiResponse";
 import {getCurrentHour} from "./utils/time-utils";
+import {LocalstorageService} from "./services/localstorage.service";
 
 @Component({
   selector: 'app-root',
@@ -17,18 +18,27 @@ export class AppComponent implements OnInit{
   weatherData$: Observable<OpenWeatherApiResponse> = new Observable<OpenWeatherApiResponse>()
   locationData$: Observable<GeolocationApiResponse> = new Observable<GeolocationApiResponse>()
   currentHour = getCurrentHour()
-  // currentLocation = this._localStorageService.getCurrentLocation()
 
   constructor(
     readonly _weatherService: OpenWeatherApiService,
-    private readonly _locationService: GeolocationApiService,
-    // private readonly _localStorageService: LocalstorageService
+    readonly _locationService: GeolocationApiService,
+    readonly _localStorageService: LocalstorageService,
   ) {}
 
   ngOnInit(): void {
-    // console.log(this.currentLocation.name)
-    this._weatherService.getWeatherData(45.75, 21.22) //initially for Timi
+    this._weatherService.getWeatherData().then()
     this.weatherData$ = this._weatherService.weatherData$
-    this.locationData$ = this._locationService.locationData$
+  }
+
+  isFavorite(){
+    return this._localStorageService.checkIfFavorite(this._locationService.currentLocation$.value)
+  }
+
+  addToFavorites() {
+    return this._localStorageService.addFavoriteLocation(this._locationService.currentLocation$.value)
+  }
+
+  removeFromFavorites() {
+    return this._localStorageService.removeFavoriteLocation(this._locationService.currentLocation$.value)
   }
 }

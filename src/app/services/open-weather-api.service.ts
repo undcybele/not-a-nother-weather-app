@@ -1,9 +1,11 @@
 import { Injectable } from '@angular/core';
 import {HttpClient} from "@angular/common/http";
 import {getUnixTimestamp} from "../utils/time-utils";
-import {OpenWeatherApiResponse} from "../model/OpenWeatherApiResponse";
-import {Observable} from "rxjs";
+import {OpenWeatherApiResponse} from "../models/OpenWeatherApiResponse";
+import {firstValueFrom, map, Observable} from "rxjs";
 import {environment} from "../../environments/environment";
+import {LocalstorageService} from "./localstorage.service";
+import {GeolocationApiService} from "./geolocation-api.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,16 +17,19 @@ export class OpenWeatherApiService {
   weatherData$: Observable<OpenWeatherApiResponse> = new Observable<OpenWeatherApiResponse>()
   timestamp = getUnixTimestamp()
 
-  constructor(private readonly _httpClient: HttpClient) {}
+  constructor(
+    private readonly _httpClient: HttpClient,
+    private readonly _geolocationService: GeolocationApiService,
+    private readonly _localStorageService: LocalstorageService
+  ) {}
 
-  buildUrl(lat: number, long: number) {
-    console.log(lat, long)
-    return `${this.weatherRootUrl}?lat=${lat.toFixed(2)}&lon=${long.toFixed(2)}&type=hour&start=${this.timestamp.start}&end=${this.timestamp.end}&units=metric&appid=${this.WeatherApiKey}`
+  async buildUrl() {
+    const coordinates = this._geolocationService.currentLocation$.value.coordinates;
+    return `${this.weatherRootUrl}?lat=${coordinates[1].toFixed(2)}&lon=${coordinates[0].toFixed(2)}&type=hour&start=${this.timestamp.start}&end=${this.timestamp.end}&units=metric&appid=${this.WeatherApiKey}`
   }
 
-  getWeatherData(lat: number, long: number) {
-    let ur = this.buildUrl(lat, long)
-    console.log(ur)
-    this.weatherData$ = this._httpClient.get<OpenWeatherApiResponse>(ur)
+  async getWeatherData() {
+    const url = await this.buildUrl()
+    this.weatherData$ = this._httpClient.get<OpenWeatherApiResponse>(url)
   }
 }
