@@ -21,7 +21,7 @@ export class AppComponent implements OnInit{
 
   constructor(
     readonly _weatherService: OpenWeatherApiService,
-    readonly _locationService: GeolocationApiService,
+    readonly _geolocationService: GeolocationApiService,
     readonly _localStorageService: LocalstorageService,
   ) {}
 
@@ -31,14 +31,14 @@ export class AppComponent implements OnInit{
   }
 
   isFavorite(){
-    return this._localStorageService.checkIfFavorite(this._locationService.currentLocation$.value)
+    return this._localStorageService.checkIfFavorite(this._geolocationService.currentLocation$.value)
   }
 
   addToFavorites() {
-    return this._localStorageService.addFavoriteLocation(this._locationService.currentLocation$.value)
+    return this._localStorageService.addFavoriteLocation(this._geolocationService.currentLocation$.value)
   }
 
   removeFromFavorites() {
-    return this._localStorageService.removeFavoriteLocation(this._locationService.currentLocation$.value)
+    return this._localStorageService.removeFavoriteLocation(this._geolocationService.currentLocation$.value)
   }
 }

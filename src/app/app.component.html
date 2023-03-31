@@ -1,8 +1,11 @@
-<div class="flex flex-row p-8 min-h-screen">
-  <div class="flex basis-4/6 justify-items-start items-end">
+<div class="flex flex-row min-h-screen">
+  <div class="flex basis-4/6 p-8 justify-items-start items-end">
     <div *ngIf="_weatherService.weatherData$ | async as data; else elseBlock">
         <div class="flex flex-row">
-          <div class="text-3xl">{{_locationService.currentLocation$.value.name}}</div>
+          <div class="flex flex-col">
+            <div class="text-3xl">{{_geolocationService.currentLocation$.value.name}}</div>
+            <span class="text-md">{{_geolocationService.currentLocation$.value.region}}, {{_geolocationService.currentLocation$.value.country}}</span>
+          </div>
           <button *ngIf="isFavorite(); else elseBlock" (click)="removeFromFavorites()" mat-icon-button color="primary" aria-label="remove from favorites">
             <mat-icon>favorite</mat-icon>
           </button>
@@ -18,14 +21,12 @@
     </div>
     <ng-template #elseBlock>Sorry no data was available for this location yesterday</ng-template>
   </div>
-  <div class="basis-2/6 max-h-screen">
-    <div class="flex flex-col">
-      <div class="flex basis-1/2 min-w-full">
-        <app-search-bar></app-search-bar>
-      </div>
-      <div class="flex basis-1/2 min-w-full">
-        <app-favorites></app-favorites>
-      </div>
+  <div class="flex flex-col basis-2/6 w-full bg-orange-400 max-h-screen justify-between">
+    <div class="p-8">
+      <app-search-bar></app-search-bar>
     </div>
+    <p class="pl-8">Your saved locations:</p>
+    <app-favorites class="flex flex-col overflow-y-auto overscroll-contain p-8 justify-start self-end min-w-full"></app-favorites>
+    <button class="m-8 p-4 border rounded-full bg-orange-50">Go to a normal weather app</button>
   </div>
 </div>
