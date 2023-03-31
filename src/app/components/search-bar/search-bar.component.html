@@ -1,11 +1,11 @@
-<form>
-  <mat-form-field>
-    <mat-label>Search</mat-label>
+<form class="example-form">
+  <mat-form-field class="example-full-width text-xl">
     <input type="text" placeholder="Search a new place" matInput (keydown)="handleSearch()"  [formControl]="searchControl" [matAutocomplete]="auto">
     <mat-autocomplete autoActiveFirstOption #auto="matAutocomplete">
       <mat-option *ngFor="let option of options$ | async" [value]="option.text" (click)="setSelectedLocation(option)">
-        {{option.text}}
+        {{option.text}}, {{option.context[1].text}}
       </mat-option>
     </mat-autocomplete>
+    <mat-icon *ngIf="searchControl.value" matSuffix (click)="clearInput()" class="cursor-pointer">clear</mat-icon>
   </mat-form-field>
 </form>

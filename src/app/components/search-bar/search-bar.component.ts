@@ -26,7 +26,12 @@ export class SearchBarComponent implements OnInit {
   ngOnInit(): void {}
 
   setSelectedLocation(option: Feature) {
-    this.selectedLocation = {name: option.text, coordinates: option.center}
+    this.selectedLocation = {
+      name: option.text,
+      coordinates: option.center,
+      region: option.context[option.context.length - 2].text,
+      country: option.context[option.context.length - 1].text,
+    }
     this._locationService.setCurrLocation(this.selectedLocation)
     this._openWeatherService.getWeatherData().then();
   }
@@ -34,5 +39,9 @@ export class SearchBarComponent implements OnInit {
   handleSearch() {
     //TODO: check if key is alphanumeric first so the api doesn't get triggered by arrows
     this.options$ = this._locationService.getLocationsOptions(this.searchControl.value).pipe(map(data => data.features))
+  }
+
+  clearInput() {
+    this.searchControl.setValue('')
   }
 }
