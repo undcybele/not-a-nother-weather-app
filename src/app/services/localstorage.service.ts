@@ -15,7 +15,6 @@ export class LocalstorageService {
   }
 
   addFavoriteLocation(newFavorite: LocationModel){
-    console.log(newFavorite)
     const updated_favorites = []
     const curr_favorites = localStorage.getItem('favorites')
     if(!curr_favorites){
@@ -29,22 +28,20 @@ export class LocalstorageService {
     return true;
   }
 
-  removeFavoriteLocation(favorite: LocationModel){
+  removeFavoriteLocation(id: string){
     let updated_favorites = []
     const curr_favorites = localStorage.getItem('favorites')
-    if(!curr_favorites){
-      updated_favorites.push(favorite)
-    }
+    if(!curr_favorites) return false
     else {
-      updated_favorites = [...JSON.parse(curr_favorites)].filter(l => l.name !== favorite.name)
+      updated_favorites = [...JSON.parse(curr_favorites)].filter(l => l.id !== id)
     }
     localStorage.setItem('favorites', JSON.stringify(updated_favorites))
     this.favoriteLocations$.next(updated_favorites)
     return true;
   }
 
-  checkIfFavorite(location: LocationModel){
-    return localStorage.getItem('favorites')?.includes(location.name)
+  checkIfFavorite(id: string){
+    return localStorage.getItem('favorites')?.includes(id)
   }
 
 }

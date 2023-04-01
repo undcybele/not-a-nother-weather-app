@@ -13,7 +13,7 @@ export class GeolocationApiService {
   geolocationRootUrl = "https://api.mapbox.com/geocoding/v5/mapbox.places/"
 
   locationData$: Observable<GeolocationApiResponse> = new Observable<GeolocationApiResponse>()
-  currentLocation$: BehaviorSubject<LocationModel> = new BehaviorSubject<LocationModel>({name: 'Timișoara', coordinates: [21.22, 45.7], region: 'Timiș', country: 'România'});
+  currentLocation$: BehaviorSubject<LocationModel> = new BehaviorSubject<LocationModel>({id:"place.23185600", name: 'Timișoara, Timiș, România', coordinates: [21.22, 45.7]});
 
   constructor(private readonly _httpClient: HttpClient) {}
 

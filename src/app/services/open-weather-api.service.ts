@@ -15,6 +15,7 @@ export class OpenWeatherApiService {
   weatherRootUrl = "https://history.openweathermap.org/data/2.5/history/city"
 
   weatherData$: Observable<OpenWeatherApiResponse> = new Observable<OpenWeatherApiResponse>()
+  currentWeather?: OpenWeatherApiResponse;
   timestamp = getUnixTimestamp()
 
   constructor(
@@ -23,13 +24,13 @@ export class OpenWeatherApiService {
     private readonly _localStorageService: LocalstorageService
   ) {}
 
-  async buildUrl() {
+  buildUrl() {
     const coordinates = this._geolocationService.currentLocation$.value.coordinates;
     return `${this.weatherRootUrl}?lat=${coordinates[1].toFixed(2)}&lon=${coordinates[0].toFixed(2)}&type=hour&start=${this.timestamp.start}&end=${this.timestamp.end}&units=metric&appid=${this.WeatherApiKey}`
   }
 
   async getWeatherData() {
-    const url = await this.buildUrl()
-    this.weatherData$ = this._httpClient.get<OpenWeatherApiResponse>(url)
+    const url = this.buildUrl()
+    this.currentWeather = await firstValueFrom(this._httpClient.get<OpenWeatherApiResponse>(url))
   }
 }
