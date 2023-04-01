@@ -18,6 +18,7 @@ export class AppComponent implements OnInit{
   weatherData$: Observable<OpenWeatherApiResponse> = new Observable<OpenWeatherApiResponse>()
   locationData$: Observable<GeolocationApiResponse> = new Observable<GeolocationApiResponse>()
   currentHour = getCurrentHour()
+  bgImage = '/assets/clear_sky.jpg'
 
   constructor(
     readonly _weatherService: OpenWeatherApiService,
@@ -30,8 +31,13 @@ export class AppComponent implements OnInit{
     this.weatherData$ = this._weatherService.weatherData$
   }
 
+  get imageUrl() {
+    const img = this._weatherService.currentWeather ? this._weatherService.currentWeather!.list[this.currentHour].weather[0].main : 'Clear';
+    return `/assets/${img}.jpg`
+  }
+
   isFavorite(){
-    return this._localStorageService.checkIfFavorite(this._geolocationService.currentLocation$.value)
+    return this._localStorageService.checkIfFavorite(this._geolocationService.currentLocation$.value.id)
   }
 
   addToFavorites() {
@@ -39,6 +45,6 @@ export class AppComponent implements OnInit{
   }
 
   removeFromFavorites() {
-    return this._localStorageService.removeFavoriteLocation(this._geolocationService.currentLocation$.value)
+    return this._localStorageService.removeFavoriteLocation(this._geolocationService.currentLocation$.value.id)
   }
 }
