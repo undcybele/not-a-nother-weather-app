@@ -1,3 +1,23 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.mat-form-field .mat-form-field-appearance-outline .mat-form-field-outline {
+  color: aliceblue !important;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-label  {
+  color: white;
+}
+
+.mat-focused .mat-form-field-label  {
+  color: white !important;
+}
+
+.mat-form-field-appearance-legacy .mat-form-field-underline {
+  background-color: white;
+}
+
+.mat-input-element {
+  caret-color: white !important;
+}

@@ -27,11 +27,10 @@ export class SearchBarComponent implements OnInit {
 
   setSelectedLocation(option: Feature) {
     this.selectedLocation = {
-      name: option.text,
-      coordinates: option.center,
-      region: option.context[option.context.length - 2].text,
-      country: option.context[option.context.length - 1].text,
-    }
+      id: option.id,
+      name: option.place_name,
+      coordinates: option.center
+    } as LocationModel
     this._locationService.setCurrLocation(this.selectedLocation)
     this._openWeatherService.getWeatherData().then();
   }

@@ -1,8 +1,13 @@
-  <div *ngFor="let location of _localStorageService.favoriteLocations$.value" class="flex flex-row justify-between items-center h-100">
-      <div class="text-xl p-4">{{location.name}}</div>
-      <button (click)="removeFromFavorites(location)" mat-icon-button color="primary" aria-label="remove from favorites">
-        <mat-icon>close</mat-icon>
-      </button>
+<div>
+  <p class="text-xl" *ngIf="_localStorageService.favoriteLocations$.value.length; else elseBlock">Your favorite locations:</p>
+  <ng-template #elseBlock>Add a new favorite location by searching it and toggling the heart button</ng-template>
+  <div *ngFor="let location of _localStorageService.favoriteLocations$.value" class="flex flex-row justify-between items-center hover:bg-gray-800 rounded-md h-100">
+    <div class="text-xl p-4" (click)="setAsCurrLocation(location)">{{location.name}}</div>
+    <button (click)="removeFromFavorites(location.id)" mat-icon-button color="primary" aria-label="remove from favorites">
+      <mat-icon class="text-white">close</mat-icon>
+    </button>
   </div>
+</div>
+
 
 
